@@ -189,13 +189,13 @@ class StateMachine:
         raise NotImplementedError(f"somehow nothing did match: current_state {self.current_state}, pattern {pattern}, current_block_type {self.current_block.block_type}")
 
 def main():
-    # Delete everything in public/
-    target = Path("public")
+    # Delete everything in docs/
+    target = Path("docs")
     if target.exists():
         shutil.rmtree(target)
     target.mkdir(parents=True, exist_ok=True)
 
-    # Copy from static/ to public/
+    # Copy from static/ to docs/
     static = Path("static")
     if static.exists():
         shutil.copytree(static, target, dirs_exist_ok=True)
@@ -205,8 +205,6 @@ def main():
     for path in Path("content").rglob("*"):
         if path.is_file() and path.suffix == ".md":
             files.append(str(path))
-
-    print(files)
     
     # Generate general Template
     with open("template.html", "r") as f:
@@ -216,7 +214,7 @@ def main():
     content_pattern = re.compile(r"{{ Content }}")
 
     for file in files:
-        dest = Path(os.path.join("public", file[8:-3]+".html"))
+        dest = Path(os.path.join(str(target), file[8:-3]+".html"))
         dest.parent.mkdir(parents=True, exist_ok=True)
         print(f"Generating page from {file} to {dest}")
 
